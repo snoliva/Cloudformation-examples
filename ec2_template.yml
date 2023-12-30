@@ -1,0 +1,106 @@
+AWSTemplateFormatVersion: 2010-09-09
+#### DESCRIPTION #################################################################################################################################################################################################
+Description: >-
+  Template base instancia EC2
+#### PARAMETERS ##################################################################
+Parameters:
+  NombreSG:
+    Type: String
+    Default: "${nombre_security_group}"
+    Description: 'Nombre del Security Group'   
+
+  DescripcionSG:
+    Type: String
+    Default: "${descripcion_security_group}"
+    Description: 'Descripcion para el Security Group'      
+
+  VPCID:
+    Type: String
+    Default: "${id_vpc}"
+    Description: 'ID de la VPC necesario para crear el Security Group'
+
+  SubnetID:
+    Type: String
+    Default: "${id_subnet_az1}"
+    Description: 'ID de la Subnet para alojar la EC2 AZ1 (zona de disponibilidad)'
+  
+  SubnetIDAZ2:
+    Type: String
+    Default: "${id_subnet_az2}"
+    Description: 'ID de la Subnet para alojar la EC2 AZ2 (zona de disponibilidad)' 
+
+  TipoInstancia:
+    Type: String
+    Description: 'Tipo de instancia que desea crear'
+    AllowedValues:
+      - "t2.micro"
+      - "t3.micro"
+    Default: "t2.micro"
+
+  AMIID:
+    Type: String
+    Default: "${id_ami}"
+    Description: 'Imagen Compartida a utilizar en la instancia'
+  
+  #### PARAMETERS > TAGS #########################################################
+  NombreInstancia:
+    Default: nombre_instancia
+    Type: String
+  Ambiente:
+    Default: nombre_ambiente
+    Type: String
+  Propietario:
+    Default: nombre_administrador_ec2
+    Type: String
+  Proposito:
+    Default: proposito_de_ec2
+    Type: String
+
+ ################################################################################
+
+##################################################################################
+Resources:
+
+  Ec2Server:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref AMIID
+      InstanceType: !Ref TipoInstancia
+      SecurityGroupIds: 
+        - !GetAtt SGInstancia.GroupId
+      SubnetId: !Ref SubnetID
+      Tags:  
+        - Key: "NombreInstancia"
+          Value: !Ref NombreInstancia
+        - Key: "Ambiente"
+          Value: !Ref Ambiente
+        - Key: "Propietario"
+          Value: !Ref Propietario
+        - Key: "Proposito"
+          Value: !Ref Proposito
+  
+  SGInstancia:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: !Ref DescripcionSG
+      VpcId: !Ref VPCID
+      GroupName: !Ref NombreSG
+      SecurityGroupEgress:
+        - Description: Allow all outbound traffic
+          IpProtocol: "-1"
+          CidrIp: 0.0.0.0/0
+      SecurityGroupIngress:
+        - Description: Acceso desde internet
+          IpProtocol: tcp
+          CidrIp: 0.0.0.0/0
+          FromPort: 80
+          ToPort: 80         
+      Tags:  
+        - Key: "NombreSG"
+          Value: !Ref NombreSG
+        - Key: "Ambiente"
+          Value: !Ref Ambiente
+        - Key: "Propietario"
+          Value: !Ref Propietario
+        - Key: "Proposito"
+          Value: !Ref Proposito
