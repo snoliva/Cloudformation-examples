@@ -9,7 +9,7 @@ Para cada ejemplo, es útil validar la sintaxis del template en caso de errores 
 
 ## 1 Crear una instancia básica de EC2
 
-Para crear el stack en cloudformation debemos ejecutar `aws cloudformation create-stack --stack-name ec2-rds-example --template-body file://EC2/01_ec2_base.yml`
+Para crear el stack en cloudformation debemos ejecutar `aws cloudformation create-stack --stack-name ec2-rds-example --template-body file://01_ec2_base.yml`
 
 ## Recursos del template
 
