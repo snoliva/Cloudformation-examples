@@ -4,4 +4,4 @@ Repositorio que contiene templates trabajados con Cloudformation.
 
 ## Repositorios
 
-Template básico de EC2: *[EC2](./EC2)
+Template básico de EC2: [EC2](./EC2)
