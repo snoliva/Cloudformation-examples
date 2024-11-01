@@ -1,0 +1,12 @@
+AWSTemplateFormatVersion: 2010-09-09
+#### DESCRIPTION #################################################################################################################################################################################################
+Description: >-
+  Template basico de una instancia ec2
+
+Resources:
+
+  Ec2Server:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-06b21ccaeff8cd686 #Amazon Linux 2023
+      InstanceType: t2.micro

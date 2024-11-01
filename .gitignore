@@ -1,0 +1,4 @@
+#Ignore files CSV, ZIP and Identifier
+*.csv 
+*.zip 
+*.Identifier
