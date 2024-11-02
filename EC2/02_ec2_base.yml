@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: 2010-09-09
+#### DESCRIPTION #################################################################################################################################################################################################
+Description: >-
+  Template basico de una instancia ec2
+
+Resources:
+
+  Ec2KeyPair:
+    Type: AWS::EC2::KeyPair
+    Properties:
+      KeyName: "ec2examplekey"
+
+  Ec2Server:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-06b21ccaeff8cd686 #Amazon Linux 2023
+      InstanceType: t2.micro
+      KeyName: !Ref Ec2KeyPair
+  
+  SecurityGroupEc2:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: "web-app-sgrp"
+      GroupDescription: "Trafico abierto protocolos SSH, HTTP, HTTPS"
+      SecurityGroupIngress:
+        - Description: Acceso desde internet puerto 80
+          IpProtocol: tcp
+          CidrIp: 0.0.0.0/0
+          FromPort: 80
+          ToPort: 80
+        - Description: Acceso desde internet puerto 443
+          IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - Description: Acceso desde internet puerto 22
+          IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
