@@ -4,6 +4,7 @@ En este repositorio se implementan templates de ec2 para cloudformation en difer
 
 - Crear una instancia básica de EC2
 - Agregar un security group con la habilitación de protocolos SSH, HTTP y HTTPS
+- Asignar una dirección ip (IP Address) y un output con la dirección del sitio web
 
 Para cada ejemplo, es útil validar la sintaxis del template en caso de errores mediante el comando `aws cloudformation validate-template --template-body file://ruta_template`
 
@@ -22,6 +23,11 @@ Este ID lo ocupamos para guardar nuestra llave mediante el comando `aws ssm get-
 
 Para actualizar el stack en cloudformation debemos ejecutar `aws cloudformation update-stack --stack-name ec2-example --template-body file://02_ec2_base.yml`
 
+## 3 Asignar una dirección ip (IP Address) y un output con la dirección del sitio web
+
+Se agrega el recurso de tipo `AWS::EC2::EIP` para asignar una ip pública a la máquina EC2.
+
+Para actualizar el stack en cloudformation debemos ejecutar `aws cloudformation update-stack --stack-name ec2-example --template-body file://03_ec2_base.yml`
 ------------------------------------------------------------------------
 
 ## Recursos del template (ec2_template.yml)
