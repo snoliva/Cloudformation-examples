@@ -1,0 +1,106 @@
+AWSTemplateFormatVersion: 2010-09-09
+#### DESCRIPTION #################################################################################################################################################################################################
+Description: >-
+  Template basico de una instancia ec2
+
+#### PARAMETERS ##################################################################
+Parameters:
+  NombreSG:
+    Type: String
+    Default: "web-app-sgrp"
+    Description: 'Nombre del Security Group' 
+
+  DescripcionSG:
+    Type: String
+    Default: "Trafico abierto protocolos SSH, HTTP, HTTPS"
+    Description: 'Descripcion para el Security Group'      
+
+  TipoInstancia:
+    Type: String
+    Description: 'Tipo de instancia que desea crear'
+    AllowedValues:
+      - "t2.micro"
+      - "t3.micro"
+    Default: "t2.micro"
+
+  AmiId:
+    Type: String
+    Default: "ami-06b21ccaeff8cd686" #Amazon Linux 2023
+    Description: 'Imagen Compartida a utilizar en la instancia'
+  
+  KeyPairName:
+    Type: String
+    Default: "ec2examplekey"
+    Description: 'Nombre de la llave ssh'
+  
+  #### PARAMETERS > TAGS #########################################################
+  NombreInstancia:
+    Default: WebAppExample
+    Type: String
+  Ambiente:
+    Default: dev
+    Type: String
+  Propietario:
+    Default: Sebastián Oliva
+    Type: String
+  Proposito:
+    Default: Ejemplo básico de instancia ec2
+    Type: String
+
+ ################################################################################
+
+Resources:
+
+  Ec2KeyPair:
+    Type: AWS::EC2::KeyPair
+    Properties:
+      KeyName: !Ref KeyPairName
+
+  Ec2Server:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref AmiId
+      InstanceType: !Ref TipoInstancia
+      KeyName: !Ref Ec2KeyPair
+    Tags:  
+      - Key: "NombreInstancia"
+        Value: !Ref NombreInstancia
+      - Key: "Ambiente"
+        Value: !Ref Ambiente
+      - Key: "Propietario"
+        Value: !Ref Propietario
+      - Key: "Proposito"
+        Value: !Ref Proposito
+
+  SecurityGroupEc2:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Ref NombreSG
+      GroupDescription: !Ref DescripcionSG
+      SecurityGroupIngress:
+        - Description: Acceso desde internet puerto 80
+          IpProtocol: tcp
+          CidrIp: 0.0.0.0/0
+          FromPort: 80
+          ToPort: 80
+        - Description: Acceso desde internet puerto 443
+          IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - Description: Acceso desde internet puerto 22
+          IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0  
+  
+  EipEc2Instance:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      InstanceId: !Ref Ec2Server
+
+Outputs:
+  URLSitioWeb:
+    Value: !Sub http://${EipEc2Instance}
+    Description: Url sitio web
