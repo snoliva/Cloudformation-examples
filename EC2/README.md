@@ -32,9 +32,10 @@ Para actualizar el stack en cloudformation debemos ejecutar `aws cloudformation 
 
 ## 4 Crear un template parametrizado con los ejemplos 1, 2 y 3
 
-Se actualiza el template ec2, agregándole parámetros y tags obteniendo un archivo yaml dinámico
+Se actualiza el template ec2, agregándole parámetros y tags obteniendo un archivo yaml dinámico.
 
-Para actualizar el stack en cloudformation debemos ejecutar 
+Para actualizar el stack en cloudformation debemos ejecutar la siguiente línea de comandos, pasando los parametros que se necesitan:
+
 `aws cloudformation update-stack --stack-name ec2-example --template-body file://04_ec2_base.yaml \
 --parameters ParameterKey=NombreSG,ParameterValue=sgrp-webapp-dev \
 ParameterKey=TipoInstancia,ParameterValue=t2.micro \
