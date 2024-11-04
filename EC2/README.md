@@ -6,6 +6,7 @@ En este repositorio se implementan templates de ec2 para cloudformation en difer
 - Agregar un security group con la habilitación de protocolos SSH, HTTP y HTTPS
 - Asignar una dirección ip (IP Address) y un output con la dirección del sitio web
 - Crear un template parametrizado con los ejemplos 1, 2 y 3
+- Agregar un volume EBS a la instancie EC2
 
 Para cada ejemplo, es útil validar la sintaxis del template en caso de errores mediante el comando `aws cloudformation validate-template --template-body file://ruta_template`
 
@@ -37,9 +38,16 @@ Se actualiza el template ec2, agregándole parámetros y tags obteniendo un arch
 Para actualizar el stack en cloudformation debemos ejecutar la siguiente línea de comandos, pasando los parametros que se necesitan:
 
 `aws cloudformation update-stack --stack-name ec2-example --template-body file://04_ec2_base.yaml \
---parameters ParameterKey=NombreSG,ParameterValue=sgrp-webapp-dev \
-ParameterKey=TipoInstancia,ParameterValue=t2.micro \
-ParameterKey=KeyPairName,ParameterValue=ec2keyexample`
+    --parameters ParameterKey=NombreSG,ParameterValue=sgrp-webapp-dev \
+    ParameterKey=TipoInstancia,ParameterValue=t2.micro \
+    ParameterKey=KeyPairName,ParameterValue=ec2keyexample`
+
+## 5 Agregar un volume EBS a la instancia EC2
+
+Se agregan los recursos de tipo `AWS::EC2::Volume` y `AWS::EC2::VolumeAttachment`. El recurso de tipo `AWS::EC2::Volume` crea un nuevo volume ebs y el recurso `AWS::EC2::VolumeAttachment` adjunta el nuevo volume ebs a la instancia ec2.
+Además se agrega al output del template, el ID del nuevo volume ebs.
+
+Para actualizar el stack en cloudformation debemos ejecutar `aws cloudformation update-stack --stack-name ec2-example --template-body file://05_ec2_base.yml`
 
 ------------------------------------------------------------------------
 
