@@ -62,6 +62,13 @@ Resources:
       ImageId: !Ref AmiId
       InstanceType: !Ref TipoInstancia
       KeyName: !Ref Ec2KeyPair
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            Encrypted: true
+            VolumeSize: 40
+            VolumeType: gp3
+            DeleteOnTermination: true
       Tags:  
         - Key: "NombreInstancia"
           Value: !Ref NombreInstancia
