@@ -8,6 +8,7 @@ En este repositorio se implementan templates de ec2 para cloudformation en difer
 - Crear un template parametrizado con los ejemplos 1, 2 y 3
 - Agregar un volume EBS a la instancie EC2
 - Aumentar el tamaño del disco raíz
+- Agregar datos de usuario
 - Eliminar el stack
 
 Para cada ejemplo, es útil validar la sintaxis del template en caso de errores mediante el comando `aws cloudformation validate-template --template-body file://ruta_template`
@@ -57,7 +58,13 @@ Para aumentar el tamaño del disco raíz se debe agregar la propiedad `BlockDevi
 
 Para actualizar el stack en cloudformation debemos ejecutar `aws cloudformation update-stack --stack-name ec2-example --template-body file://06_ec2_base.yml`
 
-## 7 Eliminar un stack
+## 7 Agregar datos o script de usuario
+
+Los parámetros o script se almacenarán como datos de usuario. Estos se ejecutan al iniciar la instancia. Se deben codificar en base64 ya que los datos de usuarios está limitados a 16KB.
+
+Para actualizar el stack en cloudformation debemos ejecutar `aws cloudformation update-stack --stack-name ec2-example --template-body file://07_ec2_base.yml`
+
+## 8 Eliminar un stack
 
 Para eliminar el stack, se debe ejecutar el siguiente comando `aws cloudformation delete-stack --stack-name ec2-example`
 
