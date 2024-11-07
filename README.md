@@ -33,5 +33,6 @@ CloudFormation es una herramienta poderosa que te permite definir, provisionar y
 
 ## Repositorios
 
-Templates básicos de EC2: *[EC2](./EC2)
+- Templates básicos de EC2: [EC2](./EC2)
+- Templates básicos de RDS: [RDS](./RDS)
 
