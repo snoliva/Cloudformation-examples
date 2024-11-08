@@ -42,9 +42,25 @@ Resources:
       PreferredBackupWindow: "04:00-05:00"
       StorageEncrypted: true
       PubliclyAccessible: false
+      MultiAZ: true
+      MonitoringInterval: 60
+      MonitoringRoleArn: !GetAtt MonitoringRole.Arn
       Tags:
         - Key: Name
           Value: db-example-mysql
+  
+  MonitoringRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: monitoring.rds.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole
 
 Outputs:
   WebAppDatabaseEndpoint:
