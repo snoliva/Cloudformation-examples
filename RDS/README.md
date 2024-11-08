@@ -6,6 +6,7 @@ En este repositorio se implementan templates de rds para cloudformation en difer
 - Agregar security group con acceso a la base de datos
 - Configurar los días que se conservarán los backups de la base de datos y el output del endpoint
 - Habilitar la instancia rds para Multi-AZ y habilitar el servicio de monitoreo en RDS
+- Crear un cluster de Aurora postgres con una instancia y una replica
 - Borrar el stack y eliminar snapshots
 
 ## 1 Crear una instancia básica de base de datos mysql
@@ -32,7 +33,17 @@ Por último, al habilitar el monitoreo, se debe agregar el ARN del rol de IAM qu
 
 Para actualizar el stack en cloudformation debemos ejecutar `aws cloudformation update-stack --stack-name rds-example --template-body file://RDS/04_rds_base.yml --parameters ParameterKey=DBPassword,ParameterValue=yNhs1234`
 
-## 5 Borrar el stack y eliminar snapshots
+## 5 Crear un cluster de Aurora postgres con una instancia y una replica
+
+En este ejemplo dejamos de utilizar aurora-mysql para utilizar aurora-postgres. En esta ocasión se configurará un cluster con una instancia y una replica de lectura.
+Para acceder a la replica de lectura, se debe utilizar el `ReadeEndpoint` output que está configurado en el template, el cual automáticamente realiza el balanceo de carga de lectura a través de todas las replicas presentes (1 en este caso).
+
+`aws cloudformation create-stack --stack-name rds-cluster-example --template-body file://RDS/05_rds_base.yml --parameters ParameterKey=DBPassword,ParameterValue=yNhs1234`
+
+**IMPORTANTE**
+Tener en cuenta que la ejecución de esta configuración de clúster Aurora PostgreSQL no está cubierta por el nivel gratuito de AWS y generará cargos. El nivel gratuito de AWS para RDS incluye 750 horas por mes de uso de instancias de una sola zona de disponibilidad db.t2.micro, db.t3.micro o db.t4g.micro, que no son compatibles con los clústeres Aurora. Esta plantilla está pensada únicamente como un ejemplo educativo. Después de la prueba, se recomienda eliminar la pila para evitar costos inesperados. Puede hacerlo mediante el comando `aws cloudformation delete-stack --stack-name rds-cluster-example`
+
+## 6 Borrar el stack y eliminar snapshots
 
 Para borrar el stack se debe ejecutar `aws cloudformation delete-stack --stack-name rds-example` 
 
