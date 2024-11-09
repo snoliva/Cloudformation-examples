@@ -41,6 +41,7 @@ Para acceder a la replica de lectura, se debe utilizar el `ReadeEndpoint` output
 `aws cloudformation create-stack --stack-name rds-cluster-example --template-body file://RDS/05_rds_base.yml --parameters ParameterKey=DBPassword,ParameterValue=yNhs1234`
 
 **IMPORTANTE**
+
 Tener en cuenta que la ejecución de esta configuración de clúster Aurora PostgreSQL no está cubierta por el nivel gratuito de AWS y generará cargos. El nivel gratuito de AWS para RDS incluye 750 horas por mes de uso de instancias de una sola zona de disponibilidad db.t2.micro, db.t3.micro o db.t4g.micro, que no son compatibles con los clústeres Aurora. Esta plantilla está pensada únicamente como un ejemplo educativo. Después de la prueba, se recomienda eliminar la pila para evitar costos inesperados. Puede hacerlo mediante el comando `aws cloudformation delete-stack --stack-name rds-cluster-example`
 
 ## 6 Borrar el stack y eliminar snapshots
