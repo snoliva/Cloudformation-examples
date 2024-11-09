@@ -1,0 +1,58 @@
+#An Aurora PostgreSQL cluster with read replicas for improved read performance.
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Aurora PostgreSQL cluster with read replicas'
+
+Parameters:
+  DBUsername:
+    NoEcho: 'true'
+    Description: Username for Mysql database access
+    Type: String
+    MinLength: '1'
+    MaxLength: '16'
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: Must begin with a letter and contain only alphanumeric characters.
+    Default: 'usrexample'
+  DBPassword:
+    NoEcho: 'true'
+    Description: Password Mysql database access
+    Type: String
+    MinLength: '8'
+    MaxLength: '20'
+    AllowedPattern: '[a-zA-Z0-9]*'
+    ConstraintDescription: Must contain only alphanumeric characters.
+
+Resources:
+  AuroraCluster:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-postgresql
+      EngineVersion: 13.6
+      MasterUsername: !Ref DBUsername
+      MasterUserPassword: !Ref DBPassword
+      DatabaseName: myauroradb
+      BackupRetentionPeriod: 7
+      PreferredBackupWindow: 02:00-03:00
+
+  PrimaryInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: aurora-postgresql
+      DBClusterIdentifier: !Ref AuroraCluster
+      DBInstanceClass: db.r5.large
+      PubliclyAccessible: false
+
+  ReadReplica1:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: aurora-postgresql
+      DBClusterIdentifier: !Ref AuroraCluster
+      DBInstanceClass: db.r5.large
+      PubliclyAccessible: false
+
+Outputs:
+  ClusterEndpoint:
+    Description: 'Cluster Endpoint'
+    Value: !GetAtt AuroraCluster.Endpoint.Address
+  ReaderEndpoint:
+    Description: 'Reader Endpoint'
+    Value: !GetAtt AuroraCluster.ReadEndpoint.Address
