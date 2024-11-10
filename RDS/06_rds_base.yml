@@ -1,0 +1,41 @@
+#A SQL Server instance with custom option and parameter groups.
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'RDS SQL Server con opciones personalizadas y grupos de parámetros'
+
+Parameters:
+  DBUsername:
+    Type: String
+    NoEcho: true
+    Default: 'usrexample'
+  DBPassword:
+    Type: String
+    NoEcho: true
+
+Resources:
+  SQLServerInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: sqlserver-ex
+      EngineVersion: 15.00.4198.2.v1
+      LicenseModel: license-included
+      DBInstanceClass: db.t3.micro
+      AllocatedStorage: 20
+      MasterUsername: !Ref DBUsername
+      MasterUserPassword: !Ref DBPassword
+      PubliclyAccessible: false
+      OptionGroupName: !Ref SQLServerOptionGroup
+      DBParameterGroupName: !Ref SQLServerParamGroup
+
+  SQLServerParamGroup:
+    Type: AWS::RDS::DBParameterGroup
+    Properties:
+      Family: sqlserver-ex-15.0
+      Description: Grupo de parámetros personalizado para SQL Server
+      Parameters:
+        max_worker_threads: '1024'
+        fill_factor: '70'
+
+Outputs:
+  DBEndpoint:
+    Description: 'Endpoint de conexión DB'
+    Value: !GetAtt SQLServerInstance.Endpoint.Address
