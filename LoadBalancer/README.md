@@ -20,12 +20,16 @@ ELB ofrece tres tipos principales de balanceadores de carga:
 
 ## 1 Ejemplo básico para levantar un application load balancer
 
-Para crear el stack se debe ejecutar el comando `aws cloudformation create-stack \
-  --stack-name alb-example-stack \
-  --template-body file://LoadaBalancer/01_alb_base.yaml \
-  --parameters \
+Para crear el stack se debe ejecutar el comando:
+
+```
+aws cloudformation create-stack \
+    --stack-name alb-example-stack \
+    --template-body file://LoadaBalancer/01_alb_base.yaml \
+    --parameters \
     ParameterKey=VpcId,ParameterValue=vpc-xxxx \
     ParameterKey=SubnetId1,ParameterValue=subnet-xxxx \
     ParameterKey=SubnetId2,ParameterValue=subnet-yyyy \
-  --capabilities CAPABILITY_IAM`
+    --capabilities CAPABILITY_IAM
+```
 
