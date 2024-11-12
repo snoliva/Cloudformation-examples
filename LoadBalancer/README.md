@@ -28,8 +28,7 @@ aws cloudformation create-stack \
     --template-body file://LoadaBalancer/01_alb_base.yaml \
     --parameters \
     ParameterKey=VpcId,ParameterValue=vpc-xxxx \
-    ParameterKey=SubnetId1,ParameterValue=subnet-xxxx \
-    ParameterKey=SubnetId2,ParameterValue=subnet-yyyy \
+    ParameterKey=SubnetIDAZ1,ParameterValue=subnet-xxxx \
+    ParameterKey=SubnetIDAZ2,ParameterValue=subnet-yyyy \
     --capabilities CAPABILITY_IAM
 ```
-
