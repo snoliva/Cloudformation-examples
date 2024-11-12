@@ -1,0 +1,97 @@
+AWSTemplateFormatVersion: 2010-09-09
+#### DESCRIPTION #############################################################
+Description: >-
+  Template para la creacion de alb general
+#### PARAMETERS ##############################################################
+Parameters:
+  NombreSGALB:
+    Type: String
+    Default: "sgrp-elb-example"
+    Description: 'Nombre del Security Group'   
+  
+  DescripcionSGALB:
+    Type: String
+    Default: "Accesos al alb"
+    Description: 'Descripcion para el Security Group'      
+  
+  VPCID:
+    Type: String
+    Description: 'ID de la VPC necesario para crear el Security Group'
+  
+  SubnetIDAZ1:
+    Type: String
+    Description: 'ID de la Subnet AZ1' 
+  
+  SubnetIDAZ2:
+    Type: String
+    Description: 'ID de la Subnet AZ2' 
+
+###########################################################################
+Resources:
+  SecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: !Ref DescripcionSGALB
+      VpcId: !Ref VPCID
+      GroupName: !Ref NombreSGALB
+      SecurityGroupEgress:
+        - Description: Allow all outbound traffic
+          IpProtocol: "-1"
+          CidrIp: 0.0.0.0/0
+      SecurityGroupIngress:
+        - Description: Acceso SSL a los servidores IPv4
+          IpProtocol: tcp
+          SourcePrefixListId: 0.0.0.0/0
+          FromPort: 443
+          ToPort: 443
+        - Description: Acceso HTTP a los servidores IPv4
+          IpProtocol: tcp
+          SourcePrefixListId: 0.0.0.0/0
+          FromPort: 80
+          ToPort: 80
+
+  ApplicationLoadBalancer:
+    Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
+    Properties:
+      Name: "alb-workloads"
+      Scheme: internet-facing
+      Type: application
+      IpAddressType: ipv4
+      Subnets: 
+        - !Ref SubnetIDAZ1
+        - !Ref SubnetIDAZ2
+      SecurityGroups: 
+        - !Ref SGALB
+
+  ALBTargetGroupDefault:
+    Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
+    Properties:
+      Name: "TGDefault"
+      HealthCheckIntervalSeconds: 30
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 2
+      Port: 80
+      Protocol: HTTP
+      HealthCheckPath: "/"
+      UnhealthyThresholdCount: 2
+      HealthCheckEnabled: true
+      VpcId: !Ref VPCID
+
+  AlbListener80:
+    Type: 'AWS::ElasticLoadBalancingV2::Listener'
+    Properties:
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref ALBTargetGroupDefault
+      LoadBalancerArn: !Ref ApplicationLoadBalancer
+
+Outputs:
+  ALBDNSName:
+    Description: 'ALB DNS Name'
+    Value: !GetAtt ApplicationLoadBalancer.DNSName
+
+  ALBTargetGroupArn:
+    Description: 'Target Group ARN'
+    Value: !Ref ALBTargetGroupDefault
