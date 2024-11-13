@@ -45,12 +45,12 @@ Resources:
       SecurityGroupIngress:
         - Description: Acceso SSL a los servidores IPv4
           IpProtocol: tcp
-          SourcePrefixListId: 0.0.0.0/0
+          CidrIp: 0.0.0.0/0
           FromPort: 443
           ToPort: 443
         - Description: Acceso HTTP a los servidores IPv4
           IpProtocol: tcp
-          SourcePrefixListId: 0.0.0.0/0
+          CidrIp: 0.0.0.0/0
           FromPort: 80
           ToPort: 80
 
