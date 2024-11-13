@@ -3,6 +3,7 @@
 En este repositorio se implementan templates de elastic load balancing para cloudformation en diferentes escenarios y con sus propiedades básicas para iniciar un balanceador de carga.
 
 - Ejemplo básico para levantar un application load balancer
+- Redirección básica de HTTP a HTTPS
 
 # Introducción
 
@@ -26,6 +27,27 @@ Para crear el stack se debe ejecutar el comando:
 aws cloudformation create-stack \
     --stack-name alb-example-stack \
     --template-body file://LoadaBalancer/01_alb_base.yaml \
+    --parameters \
+    ParameterKey=VpcId,ParameterValue=vpc-xxxx \
+    ParameterKey=SubnetIDAZ1,ParameterValue=subnet-xxxx \
+    ParameterKey=SubnetIDAZ2,ParameterValue=subnet-yyyy \
+    --capabilities CAPABILITY_IAM
+```
+
+## 2 Redirección básica de HTTP a HTTPS
+
+Para este ejemplo, es necesario tener un certificado SSL en AWS. Para aquello se debe pedir o importar un certificado en el servicio ACM. Luedo para obtener el ARN del certificado se debe:
+
+1. Ir al servicio Ceritificate Manager
+2. Encontrar el certificado
+3. Copiar el ARN del certificado.
+
+Para actualizar el stack se debe ejecutar el comando:
+
+```
+aws cloudformation update-stack \
+    --stack-name alb-example-stack \
+    --template-body file://LoadaBalancer/02_alb_base.yaml \
     --parameters \
     ParameterKey=VpcId,ParameterValue=vpc-xxxx \
     ParameterKey=SubnetIDAZ1,ParameterValue=subnet-xxxx \
