@@ -65,7 +65,7 @@ Resources:
         - !Ref SubnetIDAZ1
         - !Ref SubnetIDAZ2
       SecurityGroups: 
-        - !Ref SGALB
+        - !Ref SecurityGroup
 
   ALBTargetGroupDefault:
     Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
