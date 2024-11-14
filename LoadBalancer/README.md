@@ -4,6 +4,7 @@ En este repositorio se implementan templates de elastic load balancing para clou
 
 - Ejemplo básico para levantar un application load balancer
 - Redirección básica de HTTP a HTTPS
+- Grupos de destino múltiples con enrutamiento basado en rutas
 
 # Introducción
 
@@ -47,10 +48,29 @@ Para actualizar el stack se debe ejecutar el comando:
 ```
 aws cloudformation update-stack \
     --stack-name alb-example-stack \
-    --template-body file://LoadaBalancer/02_alb_base.yaml \
+    --template-body file://LoadBalancer/02_alb_base.yml \
     --parameters \
     ParameterKey=VpcId,ParameterValue=vpc-xxxx \
     ParameterKey=SubnetIDAZ1,ParameterValue=subnet-xxxx \
     ParameterKey=SubnetIDAZ2,ParameterValue=subnet-yyyy \
+    ParameterKey=CertificateArn,ParameterValue=arn:aws:acm:region:xxxxx:certificate/xxxxxxxx \
+    --capabilities CAPABILITY_IAM
+```
+
+## 3 Grupos de destino múltiples con enrutamiento basado en rutas
+
+En este ejemplo se crea una regla de enrutamiento con una ruta específica para el grupo de destino seleccionado. En este caso, enruta las solicitudes con la ruta "/api/*" al grupo de destino de la API. Otras solicitudes van al grupo de destino predeterminado.
+
+Para actualizar el stack se debe ejecutar el comando:
+
+```
+aws cloudformation update-stack \
+    --stack-name alb-example-stack \
+    --template-body file://LoadBalancer/02_alb_base.yml \
+    --parameters \
+    ParameterKey=VpcId,ParameterValue=vpc-xxxx \
+    ParameterKey=SubnetIDAZ1,ParameterValue=subnet-xxxx \
+    ParameterKey=SubnetIDAZ2,ParameterValue=subnet-yyyy \
+    ParameterKey=CertificateArn,ParameterValue=arn:aws:acm:region:xxxxx:certificate/xxxxxxxx \
     --capabilities CAPABILITY_IAM
 ```

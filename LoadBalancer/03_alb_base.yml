@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 #### DESCRIPTION #############################################################
 Description: >-
-  Template para la creacion de alb general
+  Template para la creacion de alb general con redirección HTTP a HTTPS
 #### PARAMETERS ##############################################################
 Parameters:
   NombreSGALB:
@@ -24,7 +24,11 @@ Parameters:
   
   SubnetIDAZ2:
     Type: String
-    Description: 'ID de la Subnet AZ2' 
+    Description: 'ID de la Subnet AZ2'
+
+  CertificateArn:
+    Type: String
+    Description: 'ARN del certificado SSL'
 
 ###########################################################################
 Resources:
@@ -38,6 +42,8 @@ Resources:
         - Description: Allow all outbound traffic
           IpProtocol: "-1"
           CidrIp: 0.0.0.0/0
+          FromPort: -1
+          ToPort: -1
       SecurityGroupIngress:
         - Description: Acceso SSL a los servidores IPv4
           IpProtocol: tcp
@@ -66,7 +72,7 @@ Resources:
   ALBTargetGroupDefault:
     Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
     Properties:
-      Name: "TGDefault"
+      Name: "tg-default"
       HealthCheckIntervalSeconds: 30
       HealthCheckTimeoutSeconds: 5
       HealthyThresholdCount: 2
@@ -83,9 +89,58 @@ Resources:
       Port: 80
       Protocol: HTTP
       DefaultActions:
+        - Type: redirect
+          RedirectConfig:
+            Protocol: HTTPS
+            Port: 443
+            Host: "#{host}"
+            Path: "/#{path}"
+            Query: "#{query}"
+            StatusCode: HTTP_301
+      LoadBalancerArn: !Ref ApplicationLoadBalancer
+
+  AlbListener443:
+    Type: 'AWS::ElasticLoadBalancingV2::Listener'
+    Properties:
+      Port: 443
+      Protocol: HTTPS
+      Certificates:
+        - CertificateArn: !Ref CertificateArn
+      DefaultActions:
         - Type: forward
           TargetGroupArn: !Ref ALBTargetGroupDefault
       LoadBalancerArn: !Ref ApplicationLoadBalancer
+  
+  ApiTargetGroup:
+    Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
+    Properties:
+      Name: "tg-api"
+      HealthCheckPath: "/api/health"
+      Port: 8080
+      Protocol: HTTP
+      VpcId: !Ref VPCID
+
+  WebTargetGroup:
+    Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
+    Properties:
+      Name: "tg-web"
+      HealthCheckPath: "/health"
+      Port: 80
+      Protocol: HTTP
+      VpcId: !Ref VPCID
+
+  ListenerRule:
+    Type: 'AWS::ElasticLoadBalancingV2::ListenerRule'
+    Properties:
+      ListenerArn: !Ref AlbListener80
+      Priority: 1
+      Conditions:
+        - Field: path-pattern
+          Values: 
+            - "/api/*"
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref ApiTargetGroup
 
 Outputs:
   ALBDNSName:
@@ -95,3 +150,18 @@ Outputs:
   ALBTargetGroupArn:
     Description: 'Target Group ARN'
     Value: !Ref ALBTargetGroupDefault
+
+
+# This template creates a complete ALB setup with:
+
+# HTTPS support
+
+# Automatic HTTP to HTTPS redirection
+
+# Path-based routing
+
+# Health checks
+
+# Multi-AZ deployment
+
+# Security group configuration
