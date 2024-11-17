@@ -11,5 +11,5 @@ En este repositorio se implementan templates de s3 para cloudformation con propi
 Para crear el bucket S3 se debe ejecutar el siguiente comando:
 
 ```bash
-`aws cloudformation create-stack --stack-name s3-example --template-body file://S3/01_s3_base.yml`
+aws cloudformation create-stack --stack-name s3-example --template-body file://S3/01_s3_base.yml
 ```
