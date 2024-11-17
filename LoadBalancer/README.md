@@ -129,7 +129,7 @@ Para actualizar el stack se debe ejecutar el comando:
 ```
 aws cloudformation update-stack \
     --stack-name alb-example-stack \
-    --template-body file://LoadBalancer/02_alb_base.yml \
+    --template-body file://LoadBalancer/05_alb_base.yml \
     --parameters \
     ParameterKey=VpcId,ParameterValue=vpc-xxxx \
     ParameterKey=SubnetIDAZ1,ParameterValue=subnet-xxxx \
