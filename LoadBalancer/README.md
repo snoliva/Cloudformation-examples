@@ -149,3 +149,7 @@ aws elbv2 modify-listener --listener-arn $LISTENER_ARN \
   ]
 }"
 ```
+
+## 6 Eliminar un stack
+
+Para eliminar el stack, se debe ejecutar el siguiente comando `aws cloudformation delete-stack --stack-name alb-example-stack`
