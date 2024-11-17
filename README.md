@@ -36,5 +36,5 @@ CloudFormation es una herramienta poderosa que te permite definir, provisionar y
 - Templates básicos de EC2: [EC2](./EC2)
 - Templates básicos de RDS: [RDS](./RDS)
 - Templates básicos de ELB: [ELB](./LoadBalancer)
-- Templates básicos de ELB: [S3](./S3)
+- Templates básicos de S3: [S3](./S3)
 
