@@ -1,0 +1,10 @@
+AWSTemplateFormatVersion: 2010-09-09
+#### DESCRIPTION #############################################################
+Description: >-
+  Template para la creacion de un bucket s3
+
+Resources:
+  S3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: example-s3-simple-test
