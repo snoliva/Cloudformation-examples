@@ -101,17 +101,15 @@ Para este ejemplo, se divide el tráfico dependiendo del peso. En este caso, `Bl
 
 Este ejemplo sirve de buena práctica cuando actualizamos a una nueva versión de una aplicación. En primera instancia el entorno **Blue** recibe el 90% del tráfico. El entorno **Green** recibe el 10% del tráfico, por lo que al actualizar una aplicación a una nueva versión, se debe realizar al entorno **Green**. Una vez realizada la actualización, se debe realizar una transición gradual, puede ser 50-50 para terminar en un 0-100.
 
+```
 Blue Environment (90% tráfico)
-
-├── Versión Actual (v1.0)
-
-└── Tráfico producción
+    ├── Versión Actual (v1.0)
+    └── Tráfico producción
 
 Green Environment (10% traffic)
-
-├── Nueva versión (v1.1)
-
-└── Tráfico de testing
+    ├── Nueva versión (v1.1)
+    └── Tráfico de testing
+```
 
 | Stage | Description | Blue Weight | Green Weight | Status |
 |-------|-------------|-------------|--------------|--------|
