@@ -6,6 +6,7 @@ En este repositorio se implementan templates de s3 para cloudformation con propi
 
 - Crear un simple bucket S3
 - Crear un bucket s3 con versionamiento y cifrado
+- Actualización bucket s3 con reglas de ciclo de vida
 
 ## 1 Crear un simple bucket S3
 
@@ -21,8 +22,24 @@ Para este ejemplo se configura el cifrado del lado del servidor para el bucket s
 
 Por último, se implementan buenas prácticas de seguridad, en este caso, se bloquea el acceso a todo el público.
 
-Para crear actualizar el bucket S3 se debe ejecutar el siguiente comando:
+Para actualizar el bucket S3 se debe ejecutar el siguiente comando:
 
 ```bash
 aws cloudformation update-stack --stack-name s3-example --template-body file://S3/02_s3_base.yml
+```
+
+## 3 Actualización bucket s3 con reglas de ciclo de vida
+
+Para este template de S3, se agregan reglas para el ciclo de vida de los archivos dentro del bucket.
+
+**Regla 1 "TransitionToIA"**: Después de 90 días los archivos a un "Standard-IA" storage. En palabras simples, refiere a trasladar archivos que raramente se ocupan a un espacio más barato.
+
+**Regla 2 "TransitionToGlacier"**: Después de 180 días, mueve los archivos a un "Glacier" storage. Similar a mover archivos muy viejos a un storage de largo plazo.
+
+**Regla 3 "ExpireObjects"**: Automáticamente borra los archivos después de 365 días.
+
+Para crear actualizar el bucket S3 se debe ejecutar el siguiente comando:
+
+```bash
+aws cloudformation update-stack --stack-name s3-example --template-body file://S3/03_s3_base.yml
 ```
