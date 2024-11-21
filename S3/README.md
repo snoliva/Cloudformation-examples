@@ -7,6 +7,7 @@ En este repositorio se implementan templates de s3 para cloudformation con propi
 - Crear un simple bucket S3
 - Crear un bucket s3 con versionamiento y cifrado
 - Actualización bucket s3 con reglas de ciclo de vida
+- Configurar un S3 para un sitio web estático
 
 ## 1 Crear un simple bucket S3
 
@@ -38,8 +39,26 @@ Para este template de S3, se agregan reglas para el ciclo de vida de los archivo
 
 **Regla 3 "ExpireObjects"**: Automáticamente borra los archivos después de 365 días.
 
-Para crear actualizar el bucket S3 se debe ejecutar el siguiente comando:
+Para actualizar el bucket S3 se debe ejecutar el siguiente comando:
 
 ```bash
 aws cloudformation update-stack --stack-name s3-example --template-body file://S3/03_s3_base.yml
+```
+
+## 4 Configurar un S3 para un sitio web estático
+
+Para este ejemplo se configura un bucket como sitio web estático. Se configura con `index.html` como página principal y `error.html` para el manejo de errores.
+
+Además se agrega una configuración de reglas CORS (Cross-Origin Resource Sharing) que:
+
+- Permite el acceso al sitio desde cualquier dominio
+- Solo permite GET requests
+- Establece un tiempo de caché de 3000 segundos
+
+Y por último, se crea una política para el bucket.
+
+Para crear el bucket S3 se debe ejecutar el siguiente comando:
+
+```bash
+aws cloudformation update-stack --stack-name s3-example --template-body file://S3/04_s3_base.yml
 ```
