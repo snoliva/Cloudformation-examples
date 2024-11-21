@@ -60,5 +60,5 @@ Y por último, se crea una política para el bucket.
 Para crear el bucket S3 se debe ejecutar el siguiente comando:
 
 ```bash
-aws cloudformation update-stack --stack-name s3-example --template-body file://S3/04_s3_base.yml
+aws cloudformation update-stack --stack-name s3-website-example --template-body file://S3/04_s3_base.yml
 ```
