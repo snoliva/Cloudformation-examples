@@ -8,6 +8,8 @@ En este repositorio se implementan templates de s3 para cloudformation con propi
 - Crear un bucket s3 con versionamiento y cifrado
 - Actualización bucket s3 con reglas de ciclo de vida
 - Configurar un S3 para un sitio web estático
+- Bucket con propiedades avanzadas
+- Eliminar el stack
 
 ## 1 Crear un simple bucket S3
 
@@ -60,5 +62,23 @@ Y por último, se crea una política para el bucket.
 Para crear el bucket S3 se debe ejecutar el siguiente comando:
 
 ```bash
-aws cloudformation update-stack --stack-name s3-website-example --template-body file://S3/04_s3_base.yml
+aws cloudformation create-stack --stack-name s3-website-example --template-body file://S3/04_s3_base.yml
 ```
+
+## 5 Bucket con propiedades avanzadas
+
+Para este ejemplo se requiere un poco de conocimiento avanzado. En resumen:
+
+- Habilita el versionamiento de los archivos
+- Contiene reglas de ciclo de vida de los archivos
+- Cada acceso se registra en un bucket diferente (LoggingBucket)
+- Recibes una notificación cada vez que alguien agregue archivos nuevos
+- Las versiones antiguas se limpian automáticamente después de 6 meses
+
+```bash
+aws cloudformation create-stack --stack-name s3-advanced-example --template-body file://S3/05_s3_base.yml
+```
+
+## 6 Eliminar el stack
+
+Para eliminar el stack, se debe ejecutar el siguiente comando `aws cloudformation delete-stack --stack-name name_bucket_stack`
