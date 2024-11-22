@@ -1,0 +1,61 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Advanced S3 bucket with multiple features
+
+Resources:
+  AdvancedBucket:
+    Type: 'AWS::S3::Bucket'
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: example-s3-advanced-not
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: MoveToIA
+            Status: Enabled
+            Transitions:
+              - TransitionInDays: 90
+                StorageClass: STANDARD_IA
+          - Id: DeleteOldVersions
+            Status: Enabled
+            NoncurrentVersionExpirationInDays: 180
+      LoggingConfiguration:
+        DestinationBucketName: !Ref LoggingBucket
+        LogFilePrefix: logs/
+      NotificationConfiguration:
+        TopicConfigurations:
+          - Event: s3:ObjectCreated:*
+            Topic: !Ref NotificationTopic
+      Tags:
+        - Key: Environment
+          Value: Production
+        - Key: Project
+          Value: Example
+
+  LoggingBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: example-logging-bucket
+      AccessControl: LogDeliveryWrite
+
+  NotificationTopic:
+    Type: 'AWS::SNS::Topic'
+    Properties:
+      TopicName: s3-notification-topic
+
+Outputs:
+  BucketName:
+    Description: Name of the created bucket
+    Value: !Ref AdvancedBucket
+  BucketARN:
+    Description: ARN of the created bucket
+    Value: !GetAtt AdvancedBucket.Arn
