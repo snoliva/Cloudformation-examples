@@ -66,6 +66,7 @@ A continuación se explican los componentes principales:
 **Default Cache Behavior**
 
 `TargetOriginId`: Enlace al origen (S3 bucket)
+
 `ViewerProtocolPolicy: redirect-to-https`: Tres posibles valores:
 
 1. `redirect-to-https:` redirecciona automáticamente HTTP a HTTPS
@@ -80,7 +81,9 @@ A continuación se explican los componentes principales:
 **Origins**
 
 `DomainName:` Nombre de dominio del bucket s3.
+
 `Id:` Identificador único usado para referenciar al origin.
+
 `S3OriginConfig:` Configuración específica para el s3 bucket.
 
 Para crear el stack debemos ejecutar:
