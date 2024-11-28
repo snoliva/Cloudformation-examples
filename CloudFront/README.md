@@ -53,6 +53,9 @@ Si bien CloudFront no es difícil de entender en la teoría, contiene varias pro
 # Ejemplos
 
 - Distribución básica de CloudFront con S3 Origin
+- Cloudfront con sitio web estático en S3
+- Cloudfront con manejo de errores personalizado
+- Cloudfront con diferentes reglas de caché
 
 
 ## 1 Distribución básica de CloudFront con S3 Origin
@@ -92,7 +95,7 @@ Para crear el stack debemos ejecutar:
 aws cloudformation create-stack --stack-name cdn-example --template-body file://CloudFront/01_cfront_base.yml
 ```
 
-## 2 Simple CloudFront with S3 for static website
+## 2 Cloudfront con sitio web estático en S3
 
 Un ejemplo de sitio web básico.
 
@@ -106,8 +109,20 @@ aws cloudformation create-stack --stack-name cdn-example --template-body file://
 
 Para este ejemplo se agregan las opciones para el manejo de errores personalizados en el sitio web estático que se va a construir.
 
-Para crear el stack debemos ejecutar:
+Para actualizar el stack debemos ejecutar:
 
 ```bash
-aws cloudformation create-stack --stack-name cdn-example --template-body file://CloudFront/03_cfront_base.yml
+aws cloudformation update-stack --stack-name cdn-example --template-body file://CloudFront/03_cfront_base.yml
+```
+
+## 4 Cloudfront con diferentes reglas de caché
+
+Para las imágenes la regla permite almacenarlas en caché durante un periodo de tiempo más largo.
+
+Para las api, no guarda en caché.
+
+Para actualizar el stack debemos ejecutar:
+
+```bash
+aws cloudformation update-stack --stack-name cdn-example --template-body file://CloudFront/04_cfront_base.yml
 ```
