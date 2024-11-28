@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'CloudFront with different caching rules'
+
+Resources:
+  ContentBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Sub '${AWS::StackName}-content'
+
+  DistributionExample:
+    Type: 'AWS::CloudFront::Distribution'
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
+        DefaultCacheBehavior:
+          TargetOriginId: myOrigin
+          ViewerProtocolPolicy: redirect-to-https
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6  # Optimized caching
+        CacheBehaviors:
+          - PathPattern: /images/*
+            TargetOriginId: myOrigin
+            ViewerProtocolPolicy: redirect-to-https
+            CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6  # Cache images longer
+          - PathPattern: /api/*
+            TargetOriginId: myOrigin
+            ViewerProtocolPolicy: https-only
+            CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad  # No caching for API
+        Origins:
+          - DomainName: !Sub '${WebsiteBucket}.s3.amazonaws.com'
+            Id: myOrigin
+            S3OriginConfig:
+              OriginAccessIdentity: ''
+        CustomErrorResponses:
+          - ErrorCode: 404
+            ResponseCode: 404
+            ResponsePagePath: /errors/404.html
+            ErrorCachingMinTTL: 60
+          - ErrorCode: 403
+            ResponseCode: 403
+            ResponsePagePath: /errors/403.html
+            ErrorCachingMinTTL: 60
