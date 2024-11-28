@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'CloudFront with custom error handling'
+
+Resources:
+  WebsiteBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Sub '${AWS::StackName}-errors'
+
+  DistributionExample:
+    Type: 'AWS::CloudFront::Distribution'
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
+        DefaultCacheBehavior:
+          TargetOriginId: myOrigin
+          ViewerProtocolPolicy: redirect-to-https
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+        Origins:
+          - DomainName: !Sub '${WebsiteBucket}.s3.amazonaws.com'
+            Id: myOrigin
+            S3OriginConfig:
+              OriginAccessIdentity: ''
+        CustomErrorResponses:
+          - ErrorCode: 404
+            ResponseCode: 404
+            ResponsePagePath: /errors/404.html
+            ErrorCachingMinTTL: 60
+          - ErrorCode: 403
+            ResponseCode: 403
+            ResponsePagePath: /errors/403.html
+            ErrorCachingMinTTL: 60

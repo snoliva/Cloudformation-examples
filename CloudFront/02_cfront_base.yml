@@ -1,0 +1,24 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Simple CloudFront with S3 for static website'
+
+Resources:
+  WebsiteBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !Sub '${AWS::StackName}-website'
+      
+  DistributionExample:
+    Type: 'AWS::CloudFront::Distribution'
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html  # Serves index.html by default
+        DefaultCacheBehavior:
+          TargetOriginId: myS3Website
+          ViewerProtocolPolicy: redirect-to-https
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6  # Managed-CachingOptimized
+        Origins:
+          - DomainName: !Sub '${WebsiteBucket}.s3.amazonaws.com'
+            Id: myS3Website
+            S3OriginConfig:
+              OriginAccessIdentity: ''

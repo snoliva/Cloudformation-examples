@@ -91,3 +91,23 @@ Para crear el stack debemos ejecutar:
 ```bash
 aws cloudformation create-stack --stack-name cdn-example --template-body file://CloudFront/01_cfront_base.yml
 ```
+
+## 2 Simple CloudFront with S3 for static website
+
+Un ejemplo de sitio web básico.
+
+Para crear el stack debemos ejecutar:
+
+```bash
+aws cloudformation create-stack --stack-name cdn-example --template-body file://CloudFront/02_cfront_base.yml
+```
+
+## 3 Cloudfront con manejo de errores personalizados
+
+Para este ejemplo se agregan las opciones para el manejo de errores personalizados en el sitio web estático que se va a construir.
+
+Para crear el stack debemos ejecutar:
+
+```bash
+aws cloudformation create-stack --stack-name cdn-example --template-body file://CloudFront/03_cfront_base.yml
+```
