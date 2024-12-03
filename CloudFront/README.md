@@ -126,3 +126,11 @@ Para actualizar el stack debemos ejecutar:
 ```bash
 aws cloudformation update-stack --stack-name cdn-example --template-body file://CloudFront/04_cfront_base.yml
 ```
+
+## 8 Eliminar un stack
+
+Para eliminar el stack, se debe ejecutar el siguiente comando: 
+
+```bash
+aws cloudformation delete-stack --stack-name cdn-example
+```
