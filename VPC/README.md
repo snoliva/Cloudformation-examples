@@ -1,15 +1,13 @@
 # VPC
 
-Piensa en una VPC como tu propia sección privada en la nube de AWS similar a tener tu propio edificio de oficinas:
+Piensa en una VPC como la propia sección privada en la nube de AWS similar a tener un propio edificio de oficinas.
 
 ### Conceptos básicos 🏢
-- Una VPC es tu red privada dentro de la nube AWS
+- Una VPC es la red privada dentro de la nube AWS
 
-- Es como tener tu propio espacio aislado donde puedes construir tu recursos (servidores, base de datos, etc)
+- Es como tener un propio espacio aislado donde puedes construir los recursos (servidores, base de datos, etc)
 
-- Tu tienes el completo control sobre quién puede entrar y quién puede salir.
-
-You have complete control over who can enter and exit
+- Se tiene el completo control sobre quién puede entrar y quién puede salir.
 
 ### Componentes claves 🔑
 
@@ -21,12 +19,12 @@ MyVPC:
   Properties:
     CidrBlock: 10.0.0.0/16  # This can host 65,536 IP addresses
 ```
-- Es como asignar números de calle a tu edificio
+- Es como asignar números de calle al edificio
 - Ejemplo: 10.0.0.0/16 te da direcciones de 10.0.0.0 a 10.0.255.255
 
 **2. Subnets**
 
-Las subnets vienen siendo algo como los diferentes pisos de tu edificio
+Las subnets vienen siendo algo como los diferentes pisos del edificio
 
 ```
 PublicSubnet:
@@ -41,7 +39,7 @@ PublicSubnet:
 
 **3. Internet Gateway** 
 
-Intenet Gateway es como tu entrada principal
+Intenet Gateway es la entrada principal
 
 ```
 InternetGateway:
@@ -97,7 +95,7 @@ Internet
 
 **3. Red corportativa**
 
-- Conectar tu red de oficina hacia los recursos de AWS
+- Conectar la red de oficina hacia los recursos de AWS
 
 ### Mejores prácticas
 
