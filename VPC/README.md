@@ -13,7 +13,7 @@ You have complete control over who can enter and exit
 
 ### Componentes claves 🔑
 
-1. **IP Address Range (CIDR Block)**
+**1. IP Address Range (CIDR Block)**
 
 ```
 MyVPC:
@@ -24,7 +24,7 @@ MyVPC:
 - Es como asignar números de calle a tu edificio
 - Ejemplo: 10.0.0.0/16 te da direcciones de 10.0.0.0 a 10.0.255.255
 
-2. **Subnets**
+**2. Subnets**
 
 Las subnets vienen siendo algo como los diferentes pisos de tu edificio
 
@@ -39,7 +39,7 @@ PublicSubnet:
 - Subdivisión dentro de tu VPC
 - Puede ser pública (accesible desde internet) o privada (solo interno)
 
-3. **Internet Gateway** 
+**3. Internet Gateway** 
 
 Intenet Gateway es como tu entrada principal
 
@@ -52,7 +52,7 @@ InternetGateway:
 - Permite a los recursos dentro de la VPC acceder a internet
 - Es requerido para las subnets públicas
 
-4. **Route Tables**
+**4. Route Tables**
 
 Las route tables (tablas de rutas) se puede definir como la dirección del edificio
 
@@ -86,32 +86,32 @@ Internet
 
 ### Casos de uso comúnes
 
-1. **Aplicación Web**
+**1. Aplicación Web**
 
 - Subnet pública: Web servers
 - Subnet privada: Base de datos
 
-2. **Entorno de desarrollo**
+**2. Entorno de desarrollo**
 
 - VPCs separadas para ambiente de desarrollo, testing y producción
 
-3. **Red corportativa**
+**3. Red corportativa**
 
 - Conectar tu red de oficina hacia los recursos de AWS
 
 ### Mejores prácticas
 
-1. Planificación de IP
+**1. Planificación de IP
 
 - Usar rangos de IP privadas (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16)
 - Plan de crecimiento
 
-2. **Seguridad**
+**2. Seguridad**
 
 - Usar subnets privadas para recursos sensibles
 - Implementar red ACLs y grupos de seguridad
 
-3. **Disponibilidad**
+**3. Disponibilidad**
 
 - Crear subnets in multiples zonas de disponibilidad
 - Plan de redundancia
