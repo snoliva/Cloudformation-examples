@@ -2,6 +2,8 @@
 
 Piensa en una VPC como la propia sección privada en la nube de AWS similar a tener un propio edificio de oficinas.
 
+Amazon VPC es un servicio de AWS que te permite lanzar recursos de AWS en una red virtual aislada y definida por el usuario. Funciona de manera similar a una red tradicional en un centro de datos, con la flexibilidad de escalar automáticamente y configurarse según tus necesidades
+
 ### Conceptos básicos 🏢
 - Una VPC es la red privada dentro de la nube AWS
 
@@ -119,6 +121,7 @@ Internet
 En este repositorio se muestran los siguientes ejemplos básicos para los recursos de VPC
 
 - Crear una VPC con una sola subred
+- Crear una VPC con una red pública y una red privada
 
 ### 1 Crear una VPC con una sola subred
 
@@ -130,3 +133,23 @@ Para crear el stack debemos ejecutar:
 aws cloudformation create-stack --stack-name vpc-example --template-body file://VPC/01_vpc_base.yml
 ```
 
+### 2 Crear una VPC con una red pública y una red privada
+
+Este ejemplo introduce el concepto de red pública y red privada. El recurso de red pública es directamente accesible desde internet. Contiene la propiedad `MapPublicIpOnLaunch: true` lo que indica que cualquier recurso bajo esta subnet obtiene automáticamente una dirección ip pública.
+
+Típicamente usada para:
+- Load balancers
+- Servidores web públicos
+
+En cambio, la red privada no tiene acceso directo desde internet. Lo que quiere decir, los recursos acá no tienen acceso directo desde internet.
+
+Típicamente usada para:
+- Base de datos
+- Servidores de aplicaciones
+- Servicios internos
+
+Para crear el stack debemos ejecutar:
+
+```bash
+aws cloudformation create-stack --stack-name vpc-example --template-body file://VPC/02_vpc_base.yml
+```
