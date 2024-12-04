@@ -135,7 +135,18 @@ aws cloudformation create-stack --stack-name vpc-example --template-body file://
 
 ### 2 Crear una VPC con una red pública y una red privada
 
-Este ejemplo introduce el concepto de red pública y red privada.
+Este ejemplo introduce el concepto de red pública y red privada. El recurso de red pública es directamente accesible desde internet. Contiene la propiedad `MapPublicIpOnLaunch: true` lo que indica que cualquier recurso bajo esta subnet obtiene automáticamente una dirección ip pública.
+
+Típicamente usada para:
+- Load balancers
+- Servidores web públicos
+
+En cambio, la red privada no tiene acceso directo desde internet. Lo que quiere decir, los recursos acá no tienen acceso directo desde internet.
+
+Típicamente usada para:
+- Base de datos
+- Servidores de aplicaciones
+- Servicios internos
 
 Para crear el stack debemos ejecutar:
 
