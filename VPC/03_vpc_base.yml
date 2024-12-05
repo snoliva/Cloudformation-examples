@@ -9,14 +9,14 @@ Resources:
       EnableDnsSupport: true
       EnableDnsHostnames: true
 
-  InternetGW:
+  InternetGateway:
     Type: AWS::EC2::InternetGateway
 
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
       VpcId: !Ref VPC
-      InternetGatewayId: !Ref InternetGW
+      InternetGatewayId: !Ref InternetGateway
 
   PublicSubnet:
     Type: AWS::EC2::Subnet
@@ -37,5 +37,16 @@ Resources:
     Properties:
       RouteTableId: !Ref PublicRouteTable
       DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref InternetGW
+      GatewayId: !Ref InternetGateway
 
+These examples progressively build up in complexity:
+
+First example shows the bare minimum to create a VPC with a single subnet
+
+Second example introduces the concept of public and private subnets
+
+Third example adds internet connectivity with an Internet Gateway
+
+Fourth example demonstrates multi-AZ deployment for high availability
+
+Fifth example introduces NAT Gateway for private subnet internet access
