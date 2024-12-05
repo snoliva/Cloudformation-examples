@@ -122,6 +122,7 @@ En este repositorio se muestran los siguientes ejemplos básicos para los recurs
 
 - Crear una VPC con una sola subred
 - Crear una VPC con una red pública y una red privada
+- Crear una VPC con una red pública y un internet gateway para el acceso desde internet
 
 ### 1 Crear una VPC con una sola subred
 
@@ -135,7 +136,7 @@ aws cloudformation create-stack --stack-name vpc-example --template-body file://
 
 ### 2 Crear una VPC con una red pública y una red privada
 
-Este ejemplo introduce el concepto de red pública y red privada. El recurso de red pública es directamente accesible desde internet. Contiene la propiedad `MapPublicIpOnLaunch: true` lo que indica que cualquier recurso bajo esta subnet obtiene automáticamente una dirección ip pública.
+Este ejemplo introduce el concepto de red pública y red privada. Contiene la propiedad `MapPublicIpOnLaunch: true` lo que indica que cualquier recurso bajo esta subnet obtiene automáticamente una dirección ip pública.
 
 Típicamente usada para:
 - Load balancers
@@ -152,4 +153,17 @@ Para crear el stack debemos ejecutar:
 
 ```bash
 aws cloudformation create-stack --stack-name vpc-example --template-body file://VPC/02_vpc_base.yml
+```
+## 3 Crear una VPC con una red pública y un internet gateway para el acceso desde internet
+
+Este ejemplo crea una VPC con una red pública, pero esta vez se agrega el recurso de internet gateway el cual actua como gateway requerido para la conectividad entre internet y la red pública.
+
+El recurso `AttachGateway` conecta el recurso internet gateway con la VPC.
+
+El recurso `PublicRouteTable` crea una tabla de ruta.
+
+El recurso `PublicRoute` crea una ruta para el acceso a internet (0.0.0.0/0) a través del internet gateway.
+
+```bash
+aws cloudformation create-stack --stack-name vpc-example --template-body file://VPC/03_vpc_base.yml
 ```
