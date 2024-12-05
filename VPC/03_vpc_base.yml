@@ -9,14 +9,14 @@ Resources:
       EnableDnsSupport: true
       EnableDnsHostnames: true
 
-  InternetGW:
+  InternetGateway:
     Type: AWS::EC2::InternetGateway
 
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
       VpcId: !Ref VPC
-      InternetGatewayId: !Ref InternetGW
+      InternetGatewayId: !Ref InternetGateway
 
   PublicSubnet:
     Type: AWS::EC2::Subnet
@@ -37,5 +37,4 @@ Resources:
     Properties:
       RouteTableId: !Ref PublicRouteTable
       DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref InternetGW
-
+      GatewayId: !Ref InternetGateway
