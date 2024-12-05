@@ -38,15 +38,3 @@ Resources:
       RouteTableId: !Ref PublicRouteTable
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
-
-These examples progressively build up in complexity:
-
-First example shows the bare minimum to create a VPC with a single subnet
-
-Second example introduces the concept of public and private subnets
-
-Third example adds internet connectivity with an Internet Gateway
-
-Fourth example demonstrates multi-AZ deployment for high availability
-
-Fifth example introduces NAT Gateway for private subnet internet access
