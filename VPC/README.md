@@ -123,10 +123,11 @@ En este repositorio se muestran los siguientes ejemplos básicos para los recurs
 - Crear una VPC con una sola subred
 - Crear una VPC con una red pública y una red privada
 - Crear una VPC con una red pública y un internet gateway para el acceso desde internet
+- Crear una VPC Multi-AZ con 2 subnets públicas
 
 ### 1 Crear una VPC con una sola subred
 
-Este ejemplo contiene los recursos mínimos para crear una VPC con una subnet.
+Este ejemplo contiene los recursos mínimos para construir una VPC con una subnet.
 
 Para crear el stack debemos ejecutar:
 
@@ -154,9 +155,9 @@ Para crear el stack debemos ejecutar:
 ```bash
 aws cloudformation create-stack --stack-name vpc-example --template-body file://VPC/02_vpc_base.yml
 ```
-## 3 Crear una VPC con una red pública y un internet gateway para el acceso desde internet
+### 3 Crear una VPC con una red pública y un internet gateway para el acceso desde internet
 
-Este ejemplo crea una VPC con una red pública, pero esta vez se agrega el recurso de internet gateway el cual actua como gateway requerido para la conectividad entre internet y la red pública.
+Este ejemplo construye una VPC con una red pública, pero esta vez se agrega el recurso de internet gateway el cual actua como gateway requerido para la conectividad entre internet y la red pública.
 
 El recurso `AttachGateway` conecta el recurso internet gateway con la VPC.
 
@@ -164,6 +165,20 @@ El recurso `PublicRouteTable` crea una tabla de ruta.
 
 El recurso `PublicRoute` crea una ruta para el acceso a internet (0.0.0.0/0) a través del internet gateway.
 
+Para crear el stack debemos ejecutar:
+
 ```bash
 aws cloudformation create-stack --stack-name vpc-example --template-body file://VPC/03_vpc_base.yml
+```
+
+### 4 Crear una VPC Multi-AZ con 2 subnets públicas
+
+Este ejemplo construye una VPC Multi-AZ con 2 subnets públicas, cada una en diferentes zona de disponibilidad. Contiene un internet gateway para la comunicación con internet y una tabla de ruta. Además, se parametrizan los rangos CIDR.
+
+`!Select [ 0, !GetAZs '' ]` y `!Select [ 1, !GetAZs '' ]` da lugar a las subnets en diferentes AZs.
+
+Para crear el stack debemos ejecutar:
+
+```bash
+aws cloudformation create-stack --stack-name vpc-example --template-body file://VPC/04_vpc_base.yml
 ```
