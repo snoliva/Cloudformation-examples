@@ -120,10 +120,11 @@ Internet
 
 En este repositorio se muestran los siguientes ejemplos básicos para los recursos de VPC
 
-- Crear una VPC con una sola subred
-- Crear una VPC con una red pública y una red privada
-- Crear una VPC con una red pública y un internet gateway para el acceso desde internet
-- Crear una VPC Multi-AZ con 2 subnets públicas
+- Construir una VPC con una sola subred
+- Construir una VPC con una red pública y una red privada
+- Construir una VPC con una red pública y un internet gateway para el acceso desde internet
+- Construir una VPC Multi-AZ con 2 subnets públicas
+- Construir una VPC con un NatGateway
 
 ### 1 Crear una VPC con una sola subred
 
@@ -181,4 +182,30 @@ Para crear el stack debemos ejecutar:
 
 ```bash
 aws cloudformation create-stack --stack-name vpc-example --template-body file://VPC/04_vpc_base.yml
+```
+### 5 Construir una VPC con un NatGateway
+
+Este ejemplo construye una VPC con un **NatGateway**. El **NatGateway** habilita el acceso a internet a la subnet privada. Este **NatGateway** provee una IP pública estática y debe tener lugar en la subnet pública.
+
+El flujo de la red queda de la siguiente forma:
+
+```
+Private Subnet Resources → NAT Gateway → Internet (Solo tráfico saliente)
+Internet → Public Subnet Resources (Tráfico entrante permitido)
+```
+
+Mejores prácticas recomendadas:
+
+- Segmentación adecuada de la red
+
+- Configuración de subred privada segura
+
+- Puerta de enlace NAT para acceso saliente controlado
+
+- Asignación de bloques CIDR lógicos
+
+Para crear el stack debemos ejecutar:
+
+```bash
+aws cloudformation create-stack --stack-name vpc-example --template-body file://VPC/05_vpc_base.yml
 ```
