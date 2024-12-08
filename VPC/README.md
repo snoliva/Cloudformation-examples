@@ -125,6 +125,7 @@ En este repositorio se muestran los siguientes ejemplos básicos para los recurs
 - Construir una VPC con una red pública y un internet gateway para el acceso desde internet
 - Construir una VPC Multi-AZ con 2 subnets públicas
 - Construir una VPC con un NatGateway
+- Contruir una VPC con subnet pública y privada, internet gateway y nat gateway
 
 ### 1 Crear una VPC con una sola subred
 
@@ -208,4 +209,22 @@ Para crear el stack debemos ejecutar:
 
 ```bash
 aws cloudformation create-stack --stack-name vpc-example --template-body file://VPC/05_vpc_base.yml
+```
+
+### 6 Contruir una VPC con subnet pública y privada, internet gateway y nat gateway
+
+Este ejemplo encapsula todo lo básico que debería tener una arquitectura de red en la nube de AWS. Contiene una red pública, una red privada, un internet gateway para la entrada y salida hacia internet, un nat gateway para la salida de la red privada hacia internet y sus respectivas tablas de rutas para dirigir el tráfico. En el siguiente esquema se refleja como funciona el tráfico:
+
+```
+Internet
+    ↕ (Internet Gateway)
+[Public Subnet] → Contiene NAT Gateway
+    ↕ (NAT Gateway)
+[Private Subnet]
+```
+
+Para crear el stack debemos ejecutar:
+
+```bash
+aws cloudformation create-stack --stack-name vpc-example --template-body file://VPC/06_vpc_base.yml
 ```
