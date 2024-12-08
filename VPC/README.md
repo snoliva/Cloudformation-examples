@@ -126,6 +126,7 @@ En este repositorio se muestran los siguientes ejemplos básicos para los recurs
 - Construir una VPC Multi-AZ con 2 subnets públicas
 - Construir una VPC con un NatGateway
 - Contruir una VPC con subnet pública y privada, internet gateway y nat gateway
+- Eliminar stack
 
 ### 1 Crear una VPC con una sola subred
 
@@ -228,3 +229,7 @@ Para crear el stack debemos ejecutar:
 ```bash
 aws cloudformation create-stack --stack-name vpc-example --template-body file://VPC/06_vpc_base.yml
 ```
+
+## 7 Eliminar el stack
+
+Para eliminar el stack, se debe ejecutar el siguiente comando `aws cloudformation delete-stack --stack-name name_bucket_stack`
