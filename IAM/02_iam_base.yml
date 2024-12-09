@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'EC2 and S3 Access Policy'
+
+Parameters:
+  BucketName:
+    Type: String
+    Description: S3 bucket name
+
+Resources:
+  EC2Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+
+  EC2S3Policy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: EC2S3Access
+      Roles: 
+        - !Ref EC2Role
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - ec2:DescribeInstances
+              - s3:GetObject
+              - s3:ListBucket
+            Resource: 
+              - '*'  # For EC2 Describe
+              - !Sub 'arn:aws:s3:::${BucketName}/*'
+              - !Sub 'arn:aws:s3:::${BucketName}'
