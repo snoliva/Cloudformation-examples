@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Environment-Based Access Policy'
+
+Parameters:
+  Environment:
+    Type: String
+    AllowedValues: 
+      - dev
+      - test
+      - prod
+
+Resources:
+  EnvironmentBasedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: Access based on environment tags
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - ec2:StartInstances
+              - ec2:StopInstances
+              - ec2:DescribeInstances
+            Resource: '*'
+            Condition:
+              StringEquals:
+                'aws:ResourceTag/Environment': !Ref Environment
+          
+          - Effect: Allow
+            Action:
+              - rds:ModifyDBInstance
+              - rds:DescribeDBInstances
+            Resource: '*'
+            Condition:
+              StringEquals:
+                'aws:ResourceTag/Environment': !Ref Environment
+          
+          - Effect: Deny
+            Action:
+              - ec2:DeleteInstance
+              - rds:DeleteDBInstance
+            Resource: '*'
+
