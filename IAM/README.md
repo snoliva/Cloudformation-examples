@@ -14,6 +14,7 @@ Este repositorio contiene los siguientes ejemplos:
 - Política de acceso de EC2 y S3
 - Política de acceso para desarrollo
 - Política de acceso basado en ambientes
+- Política de seguridad multiservicios
 
 ### 1 Política básica de acceso lectura-escritura a S3
 
@@ -105,4 +106,24 @@ Ejemplo de recurso con el tag asignado:
 aws ec2 create-tags \
   --resources i-1234567890abcdef0 \
   --tags Key=Environment,Value=dev
+```
+
+### 5 Política de seguridad multiservicios
+
+En esta política se construyen los accesos de lectura y escritura para un S3 bucket bajo el protocolo HTTPS. Esto lo define la condición `aws:SecureTransport': 'true`. 
+
+Además, permite el encriptado, desencriptado y la generación de claves de datos para el encriptado usando una llave KMS específica.
+
+Por último, construye una política para recuperar secretos desde AWS Secrets Manager solo si comienza con un prefix específico y deniega la operación de borrar claves KMS y secretos.
+
+Para crear el stack debemos ejecutar:
+
+```bash
+aws cloudformation create-stack \
+  --stack-name multi-service-security-policy \
+  --template-body file://IAM/05_iam_base.yml \
+  --parameters \
+    ParameterKey=SecureBucket,ParameterValue=bucket-name \
+    ParameterKey=KMSKeyId,ParameterValue=kms-key-id \
+    ParameterKey=SecretPrefix,ParameterValue=secret-prefix
 ```
