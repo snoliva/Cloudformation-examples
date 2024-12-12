@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Multi-Service Security Policy'
+
+Parameters:
+  SecureBucket:
+    Type: String
+  KMSKeyId:
+    Type: String
+  SecretPrefix:
+    Type: String
+
+Resources:
+  SecurityPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: Security-focused multi-service access
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: SecureS3Access
+            Effect: Allow
+            Action:
+              - s3:GetObject
+              - s3:PutObject
+            Resource: !Sub 'arn:aws:s3:::${SecureBucket}/*'
+            Condition:
+              Bool:
+                'aws:SecureTransport': 'true'
+          
+          - Sid: KMSUsage
+            Effect: Allow
+            Action:
+              - kms:Decrypt
+              - kms:Encrypt
+              - kms:GenerateDataKey
+            Resource: !Sub 'arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/${KMSKeyId}'
+          
+          - Sid: SecretsAccess
+            Effect: Allow
+            Action:
+              - secretsmanager:GetSecretValue
+            Resource: !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:${SecretPrefix}*'
+          
+          - Sid: DenyDangerousActions
+            Effect: Deny
+            Action:
+              - kms:DeleteKey
+              - secretsmanager:DeleteSecret
+            Resource: '*'
