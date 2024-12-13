@@ -1,0 +1,73 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Advanced Multi-Region Policy with Conditions'
+
+Parameters:
+  PrimaryRegion:
+    Type: String
+    Default: us-east-1
+  SecondaryRegion:
+    Type: String
+    Default: us-west-2
+  MaintenanceWindowStart:
+    Type: String
+    Default: '2023-01-01T00:00:00Z'
+  MaintenanceWindowEnd:
+    Type: String
+    Default: '2024-01-01T00:00:00Z'
+  AllowedIpRanges:
+    Type: CommaDelimitedList
+    Default: '10.0.0.0/8,172.16.0.0/12'
+
+Resources:
+  AdvancedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: Advanced policy with multiple conditions
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: RegionalAccess
+            Effect: Allow
+            Action:
+              - ec2:RunInstances
+              - ec2:StartInstances
+              - ec2:StopInstances
+            Resource: '*'
+            Condition:
+              StringEquals:
+                'aws:RequestedRegion': 
+                  - !Ref PrimaryRegion
+                  - !Ref SecondaryRegion
+              StringLike:
+                'aws:PrincipalTag/Role': 'Admin'
+          
+          - Sid: TimeBasedAccess
+            Effect: Allow
+            Action:
+              - rds:ModifyDBInstance
+              - rds:RebootDBInstance
+            Resource: '*'
+            Condition:
+              DateGreaterThan:
+                'aws:CurrentTime': '${MaintenanceWindowStart}'
+              DateLessThan:
+                'aws:CurrentTime': '${MaintenanceWindowEnd}'
+          
+          - Sid: IPBasedAccess
+            Effect: Allow
+            Action:
+              - dynamodb:*
+            Resource: '*'
+            Condition:
+              IpAddress:
+                'aws:SourceIp': !Ref AllowedIpRanges
+          
+          - Sid: MFARequired
+            Effect: Deny
+            NotAction:
+              - iam:ChangePassword
+              - iam:GetUser
+            Resource: '*'
+            Condition:
+              BoolIfExists:
+                'aws:MultiFactorAuthPresent': 'false'
