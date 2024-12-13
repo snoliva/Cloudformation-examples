@@ -15,6 +15,8 @@ Este repositorio contiene los siguientes ejemplos:
 - Política de acceso para desarrollo
 - Política de acceso basado en ambientes
 - Política de seguridad multiservicios
+- Política multiregional avanzada con condiciones
+- Eliminar stack
 
 ### 1 Política básica de acceso lectura-escritura a S3
 
@@ -127,3 +129,48 @@ aws cloudformation create-stack \
     ParameterKey=KMSKeyId,ParameterValue=kms-key-id \
     ParameterKey=SecretPrefix,ParameterValue=secret-prefix
 ```
+
+### 6 Política multiregional avanzada con condiciones
+
+Esta política contiene 4 principales reglas:
+
+**1. Acceso regional (RegionalAccess)**
+
+- Permite las operaciones (run, start, stop instances)
+- Solo en las regiones primarias y secundarias
+- Solo para usuarios con el tag role 'Admin'
+
+**2. Acceso basado en tiempo (TimeBasedAccess)**
+
+- Permite modificaciones y reinicios en RDS
+- Solo durante un tiempo
+- Controla cuando pueden ocurrir los cambios en la base de datos
+
+**3. Acceso basado en IP (IpBasedAccess)**
+- Permite todas las operaciones de DynamoDB
+- Solo desde rangos de IP específicos (redes privadas)
+- Restringe el acceso a redes internas
+
+**4. MFA requerido (MFARequired)**
+- Deniega todas las acciones a excepción el cambio de contraseña e información del usuario
+- Si el factor de autenticación no está presente
+- Obliga el uso de MFA para operaciones sensibles
+
+Para construir el stack debemos ejecutar:
+
+```bash
+aws cloudformation create-stack \
+  --stack-name advanced-iam-policy \
+  --template-body file://06_iam_base.yml \
+  --parameters \
+    ParameterKey=PrimaryRegion,ParameterValue=us-east-1 \
+    ParameterKey=SecondaryRegion,ParameterValue=us-west-2 \
+    ParameterKey=MaintenanceWindowStart,ParameterValue="2023-01-01T00:00:00Z" \
+    ParameterKey=MaintenanceWindowEnd,ParameterValue="2024-01-01T00:00:00Z" \
+    ParameterKey=AllowedIpRanges,ParameterValue="10.0.0.0/8\,172.16.0.0/12" \
+  --capabilities CAPABILITY_IAM
+```
+
+## 7 Eliminar stack
+
+Para eliminar el stack, se debe ejecutar el siguiente comando `aws cloudformation delete-stack --stack-name name_of_stack`
