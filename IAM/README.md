@@ -16,6 +16,7 @@ Este repositorio contiene los siguientes ejemplos:
 - Política de acceso basado en ambientes
 - Política de seguridad multiservicios
 - Política multiregional avanzada con condiciones
+- Creación de recursos IAM
 - Eliminar stack
 
 ### 1 Política básica de acceso lectura-escritura a S3
@@ -171,6 +172,27 @@ aws cloudformation create-stack \
   --capabilities CAPABILITY_IAM
 ```
 
-## 7 Eliminar stack
+### 7 Creación de recursos IAM
+
+En este ejemplo se construyen 3 recursos IAM:
+
+- Se construye un usuario iam y se agrega al grupo Developers
+- Se contruye el grupo llamado Developers con 2 políticas de AWS
+- Se construye un role que EC2 puede asumir
+
+Para construir el stack debemos ejecutar:
+
+```bash
+aws cloudformation create-stack \
+  --stack-name iam-resources \
+  --template-body file://07_iam_base.yml \
+  --parameters \
+    ParameterKey=UserName,ParameterValue=john.doe \
+    ParameterKey=UserPassword,ParameterValue=YourSecurePassword123! \
+    ParameterKey=DevelopersGroup,ParameterValue=Developers \
+  --capabilities CAPABILITY_IAM
+```
+
+### 8 Eliminar stack
 
 Para eliminar el stack, se debe ejecutar el siguiente comando `aws cloudformation delete-stack --stack-name name_of_stack`
