@@ -1,0 +1,60 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'IAM Resources'
+
+Parameters:
+  DevelopersGroup:
+    Type: String
+    Description: Name of developers group
+    Default: Developers
+  
+  UserPassword:
+    Type: String
+    Description: Initial password for IAM user
+    MinLength: 8
+    MaxLength: 40
+    NoEcho: true
+    ConstraintDescription: Must be between 8 and 40 characters
+    
+  UserName:
+    Type: String
+    Description: Name of the IAM user
+    Default: john.doe
+    MinLength: 1
+    MaxLength: 64
+    AllowedPattern: "[a-zA-Z0-9._-]+"
+    ConstraintDescription: Must contain only alphanumeric characters, periods, underscores, and hyphens
+  
+# IAM Users
+Resources:
+  MyUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: !Ref UserName
+      Groups:
+        - !Ref DevelopersGroup
+      LoginProfile:
+        Password: !Ref UserPassword
+        PasswordResetRequired: true
+
+#IAM Groups
+  DevelopersGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: !Ref DevelopersGroup
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSCodeBuildDeveloperAccess
+        - arn:aws:iam::aws:policy/AWSCodeCommitPowerUser
+
+# IAM Roles
+  EC2ServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
