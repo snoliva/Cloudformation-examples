@@ -39,4 +39,5 @@ CloudFormation es una herramienta poderosa que te permite definir, provisionar y
 - Templates básicos de S3: [S3](./S3)
 - Templates básicos de CloudFront: [CDN](./CloudFront)
 - Templates básicos de VPC: [VPC](./VPC)
-- Temaplates básicos de IAM: [IAM](./IAM)
+- Templates básicos de IAM: [IAM](./IAM)
+- Templates básicos de ECS: [ECS](./ECS)
