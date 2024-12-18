@@ -1,4 +1,4 @@
-# ECS
+# Elastic Container Service
 
 ## ¿Qué es ECS?
 
