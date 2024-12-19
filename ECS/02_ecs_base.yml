@@ -1,0 +1,80 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Custom ECS Task Execution Role'
+
+Resources:
+  # 1. Task Execution Role
+  ECSTaskExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: ECSCustomTaskExecutionRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+      
+  # 2. Custom Policy for Additional Permissions
+  CustomTaskExecutionPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: CustomTaskExecutionPolicy
+      Roles: 
+        - !Ref ECSTaskExecutionRole
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          # Permissions for Secrets Manager
+          - Effect: Allow
+            Action:
+              - secretsmanager:GetSecretValue
+            Resource:
+              - !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:my-app-secrets-*'
+          
+          # Permissions for Systems Manager Parameter Store
+          - Effect: Allow
+            Action:
+              - ssm:GetParameters
+              - ssm:GetParameter
+            Resource:
+              - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/my-app/*'
+          
+          # Permissions for CloudWatch Logs
+          - Effect: Allow
+            Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource: 
+              - !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/ecs/my-app:*'
+
+# 3. Example Task Definition using the custom role
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: app-task
+      RequiresCompatibilities:
+        - FARGATE
+      NetworkMode: awsvpc
+      Cpu: '256'
+      Memory: '512'
+      ExecutionRoleArn: !GetAtt ECSTaskExecutionRole.Arn
+      ContainerDefinitions:
+        - Name: app
+          Image: nginx:latest
+          Secrets:
+            - Name: DATABASE_PASSWORD
+              ValueFrom: 'arn:aws:secretsmanager:region:account:secret:my-app-secrets:password::'
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: '/ecs/my-app'
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: 'ecs'
+
+Outputs:
+  TaskExecutionRoleArn:
+    Description: ARN of the Task Execution Role
+    Value: !GetAtt ECSTaskExecutionRole.Arn
